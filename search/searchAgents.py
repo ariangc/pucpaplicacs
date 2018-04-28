@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -40,6 +40,9 @@ from game import Actions
 import util
 import time
 import search
+
+#Code added by Arian
+from copy import deepcopy
 
 class GoWestAgent(Agent):
 	"An agent that goes West until it can't."
@@ -273,11 +276,12 @@ class CornersProblem(search.SearchProblem):
 	You must select a suitable state space and successor function
 	"""
 
-	def __init__(self, startingGameState):
+	def __init__(self, startingGameState, costFn = lambda x: 1):
 		"""
 		Stores the walls, pacman's starting position and corners.
 		"""
 		self.walls = startingGameState.getWalls()
+		self.costFn = costFn
 		self.startingPosition = startingGameState.getPacmanPosition()
 		top, right = self.walls.height-2, self.walls.width-2
 		self.corners = ((1,1), (1,top), (right, 1), (right, top))
@@ -288,15 +292,14 @@ class CornersProblem(search.SearchProblem):
 		# Please add any code here which you would like to use
 		# in initializing the problem
 		"*** YOUR CODE HERE ***"
+		self._visited, self._visitedList = {},[]
 		self.cornersState = [0,0,0,0]
-		self.visited = []
 		if(self.startingPosition in self.corners):
-			corner = self.startingPosition
-			idx = self.corners.index(corner)
+			idx = self.corners.index(self.startingPosition)
 			self.cornersState[idx] = 1
-		
-		self.startState = (self.startingPosition, tuple(cornersState))
-		self.visited.append(startState)
+
+		self.startState = (self.startingPosition, tuple(self.cornersState))
+
 
 	def getStartState(self):
 		"""
@@ -311,17 +314,18 @@ class CornersProblem(search.SearchProblem):
 		Returns whether this search state is a goal state of the problem.
 		"""
 		"*** YOUR CODE HERE ***"
-		isGoal = (0 not in state[1]) and (state[0] == self.startingPosition)
-
-		if isGoal:
-			self.visited.append(state)
+		isGoal1 = (0 not in state[1])
+		isGoal2 = (state[0] == self.startingPosition)
+		print(state[1], self.startingPosition, state[0])
+		if isGoal1 and isGoal2:
+			self._visitedList.append(state[0])
 			import __main__
 			if '_display' in dir(__main__):
 				if 'drawExpandedCells' in dir(__main__._display): #@UndefinedVariable
-					__main__._display.drawExpandedCells(self.visited) #@UndefinedVariable
+					__main__._display.drawExpandedCells(self._visitedList) #@UndefinedVariable
 
-		return isGoal
-		
+		return isGoal1 and isGoal2
+
 
 	def getSuccessors(self, state):
 		"""
@@ -345,20 +349,24 @@ class CornersProblem(search.SearchProblem):
 
 			"*** YOUR CODE HERE ***"
 			x,y = state[0]
-			cornersState = state[1]
-			dx,dy = Actions.directionToVector(action)
+			corners = list(deepcopy(state[1]))
+			dx, dy = Actions.directionToVector(action)
 			nextx, nexty = int(x + dx), int(y + dy)
-			newPos = (nextx, nexty)
-			hitsWall = self.walls[nextx][nexty]
-			if(hitsWall == 0):
+			if not self.walls[nextx][nexty]:
+				newPos = (nextx, nexty)
 				if(newPos in self.corners):
 					idx = self.corners.index(newPos)
-					cornersState[idx] = 1
-				newState = (newPos, tuple(cornersState))
-				if(newState not in self.visited):
-					successors.append(newState)
+					corners[idx] = 1
+
+				nextState = ((nextx, nexty), tuple(corners))
+				cost = self.costFn(nextState[0])
+				successors.append( ( nextState, action, cost) )
 
 		self._expanded += 1 # DO NOT CHANGE
+
+		if state not in self._visited:
+			self._visited[state] = True
+			self._visitedList.append(state[0])
 		return successors
 
 	def getCostOfActions(self, actions):

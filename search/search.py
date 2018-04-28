@@ -87,11 +87,32 @@ def depthFirstSearch(problem):
 	print "Start's successors:", problem.getSuccessors(problem.getStartState())
 	"""
 	"*** YOUR CODE HERE ***"
-	util.raiseNotDefined()
+	vis, state, answer = [], problem.getStartState(), []
+	DFS(problem, state, vis, answer)
+	print([x[0] for x in answer])
+	return answer
+
+def DFS(problem, state, vis, answer):
+	if(problem.isGoalState(state)):
+		return True
+
+	adj = problem.getSuccessors(state)
+	for nextState in adj:
+		if(nextState[0] in vis): #If the state has been already visited, skip
+			continue
+		vis.append(nextState[0])
+		answer.append(nextState[1])
+		if DFS(problem, nextState[0], vis, answer):
+			return True
+		answer.pop()
+
+	return False
+
 
 def breadthFirstSearch(problem):
 	"""Search the shallowest nodes in the search tree first."""
 	"*** YOUR CODE HERE ***"
+	util.raiseNotDefined()
 
 def uniformCostSearch(problem):
 	"""Search the node of least total cost first."""
