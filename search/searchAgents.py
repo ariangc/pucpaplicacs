@@ -308,6 +308,7 @@ class CornersProblem(search.SearchProblem):
 		"""
 		"*** YOUR CODE HERE ***"
 		return self.startState
+		#Simple comment change to test git 
 
 	def isGoalState(self, state):
 		"""
