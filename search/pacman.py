@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -122,6 +122,7 @@ class GameState:
         state.data.score += state.data.scoreChange
         GameState.explored.add(self)
         GameState.explored.add(state)
+
         return state
 
     def getLegalPacmanActions( self ):
@@ -334,14 +335,13 @@ class PacmanRules:
         return Actions.getPossibleActions( state.getPacmanState().configuration, state.data.layout.walls )
     getLegalActions = staticmethod( getLegalActions )
 
-    def applyAction( state, action ):
+    def applyAction( state, action ): #FROZ
         """
         Edits the state to reflect the results of the action.
         """
         legal = PacmanRules.getLegalActions( state )
         if action not in legal:
             raise Exception("Illegal action " + str(action))
-
         pacmanState = state.data.agentStates[0]
 
         # Update Configuration
@@ -353,10 +353,21 @@ class PacmanRules:
         nearest = nearestPoint( next )
         if manhattanDistance( nearest, next ) <= 0.5 :
             # Remove food
-            PacmanRules.consume( nearest, state )
+            PacmanRules.consume( nearest, state ) #FROZ
+
+        #ADDED BY FROZ
+        numFood = state.getNumFood()
+        pacman = [state.data.agentStates[i] for i in range(len(state.data.agentStates)) if state.data.agentStates[i].isPacman == True][0]
+        cond = pacman.start.pos == pacman.configuration.pos
+        #print(pacman.start.pos, pacman.configuration.pos)
+        if numFood == 0 and not state.data._lose and cond:
+            state.data.scoreChange += 500
+            state.data._win = True
+        #END
+
     applyAction = staticmethod( applyAction )
 
-    def consume( position, state ):
+    def consume( position, state ): #FROZ
         x,y = position
         # Eat food
         if state.data.food[x][y]:
@@ -365,10 +376,12 @@ class PacmanRules:
             state.data.food[x][y] = False
             state.data._foodEaten = position
             # TODO: cache numFood?
+            """
             numFood = state.getNumFood()
             if numFood == 0 and not state.data._lose:
                 state.data.scoreChange += 500
                 state.data._win = True
+            """
         # Eat capsule
         if( position in state.getCapsules() ):
             state.data.capsules.remove( position )
@@ -618,6 +631,7 @@ def replayGame( layout, actions, display ):
     for action in actions:
             # Execute the action
         state = state.generateSuccessor( *action )
+
         # Change the display
         display.update( state.data )
         # Allow for game specific conditions (winning, losing, etc.)

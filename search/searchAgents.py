@@ -308,7 +308,7 @@ class CornersProblem(search.SearchProblem):
 		"""
 		"*** YOUR CODE HERE ***"
 		return self.startState
-		#Simple comment change to test git 
+		#Simple comment change to test git
 
 	def isGoalState(self, state):
 		"""
@@ -317,7 +317,6 @@ class CornersProblem(search.SearchProblem):
 		"*** YOUR CODE HERE ***"
 		isGoal1 = (0 not in state[1])
 		isGoal2 = (state[0] == self.startingPosition)
-		print(state[1], self.startingPosition, state[0])
 		if isGoal1 and isGoal2:
 			self._visitedList.append(state[0])
 			import __main__

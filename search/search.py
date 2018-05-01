@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+from Queue import Queue
 
 class SearchProblem:
 	"""
@@ -89,7 +90,7 @@ def depthFirstSearch(problem):
 	"*** YOUR CODE HERE ***"
 	vis, state, answer = [], problem.getStartState(), []
 	DFS(problem, state, vis, answer)
-	print([x[0] for x in answer])
+	#print([x[0] for x in answer])
 	return answer
 
 def DFS(problem, state, vis, answer):
@@ -112,7 +113,30 @@ def DFS(problem, state, vis, answer):
 def breadthFirstSearch(problem):
 	"""Search the shallowest nodes in the search tree first."""
 	"*** YOUR CODE HERE ***"
-	util.raiseNotDefined()
+	q = Queue()
+	vis, state, answer, parent = [], problem.getStartState(), [], {}
+	q.put(state)
+	vis.append(state)
+	currState = None
+	parent[state] = None
+	while(not q.empty()):
+		currState = q.get()
+		if problem.isGoalState(currState):
+			break
+		adj = problem.getSuccessors(currState)
+		for nextState,action,cost in adj:
+			if nextState not in vis:
+				vis.append(nextState)
+				parent[nextState] = (currState, action)
+				q.put(nextState)
+
+	while parent[currState]:
+		answer.append(parent[currState][1])
+		currState = parent[currState][0]
+
+	answer = answer[::-1] #Reverse
+	#print([x[0] for x in answer])
+	return answer
 
 def uniformCostSearch(problem):
 	"""Search the node of least total cost first."""
