@@ -156,20 +156,25 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 	util.raiseNotDefined()
 
 def iterativeDeepeningSearch(problem):
-	depth = 0
-	while True:
+	""" Iterative Deepening Search improved with Binary Search to find the lowest depth"""
+	minDepth, maxDepth = 0, int(1e5)
+	while minDepth < maxDepth:
+		depth = (minDepth + maxDepth) >> 1
 		print("Depth: {}".format(depth))
 		vis, state, answer = [], problem.getStartState(), []
 		found = DLS(problem, state,vis,answer, depth)
-		if found: break
-		depth += 1
-		print("Failed")
+		print(depth, found)
+		if found:
+			maxDepth = depth
+		else:
+			minDepth = depth + 1
 
-	print("Success!")
+	vis, state, answer = [], problem.getStartState(), []
+	found = DLS(problem, state,vis,answer, maxDepth)
 	return answer
 
 def DLS(problem, state, vis, answer, depth):
-	if depth == 0 and problem.isGoalState(state):
+	if problem.isGoalState(state):
 		return True
 
 	if depth > 0:
