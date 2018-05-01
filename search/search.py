@@ -155,9 +155,42 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 	"*** YOUR CODE HERE ***"
 	util.raiseNotDefined()
 
+def iterativeDeepeningSearch(problem):
+	depth = 0
+	while True:
+		print("Depth: {}".format(depth))
+		vis, state, answer = [], problem.getStartState(), []
+		found = DLS(problem, state,vis,answer, depth)
+		if found: break
+		depth += 1
+		print("Failed")
+
+	print("Success!")
+	return answer
+
+def DLS(problem, state, vis, answer, depth):
+	if depth == 0 and problem.isGoalState(state):
+		return True
+
+	if depth > 0:
+		adj = problem.getSuccessors(state)
+		for nextState in adj:
+			if(nextState[0] in vis): #If the state has been already visited, skip
+				continue
+			vis.append(nextState[0])
+			answer.append(nextState[1])
+			if DLS(problem, nextState[0], vis, answer, depth-1):
+				return True
+			answer.pop()
+
+	return False
+
+def bidirectionalSearch(problem):
+	util.raiseNotDefined()
 
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+ids = iterativeDeepeningSearch
