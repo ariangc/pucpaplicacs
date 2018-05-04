@@ -227,7 +227,7 @@ def DLS(problem, state, vis, answer, depth):
 def bidirectionalSearch(problem):
 	qI = []
 	qG = []
-	visI,visG, answer, parent =[], [], [], {}
+	visI,visG, answer, parent,child =[], [], [], {},{}
 	#print(state)
 	qI.insert(0,problem.getStartState())
 	qG.insert(0,(problem.startingPosition,tuple([1,1,1,1])))
@@ -238,7 +238,6 @@ def bidirectionalSearch(problem):
 	parent[problem.getStartState()] = None
 	#parent[(problem.startingPosition,tuple([1,1,1,1]))] = None
 	while((not len(qI)==0) and (not len(qG)==0)):
-		print "entro "
 		currStateI = qI.pop()
 		if problem.isGoalState(currStateI) or (currStateI in qG):
 			print "waaa "
@@ -258,20 +257,25 @@ def bidirectionalSearch(problem):
 		for nextStateG,actionG,costG in adjG:
 			if nextStateG not in visG:
 				visG.append(nextStateG)
-				parent[currStateG] = (nextStateG, actionG)
+				child[nextStateI] = (currStateG, actionG)
 				qG.insert(0,nextStateG)
-		print len(qI)
-		print len(qG)
 
 	print "sali :'v'"
 
-	stateF=(problem.startingPosition,tuple([1,1,1,1]))
-	print stateF
+	#stateF=(problem.startingPosition,tuple([1,1,1,1]))
+	aux=currStateI
 	while parent[currStateI]:
 		answer.append(parent[currStateI][1])
 		currStateI = parent[currStateI][0]
+		print currStateI
 
 	answer = answer[::-1] #Reverse
+
+	while child[aux]:
+		answer.append(child[aux][1])
+		aux = child[aux][0]
+
+
 	#print([x[0] for x in answer])
 	return answer
 
