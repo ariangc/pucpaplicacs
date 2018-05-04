@@ -225,7 +225,54 @@ def DLS(problem, state, vis, answer, depth):
 	return False
 
 def bidirectionalSearch(problem):
-	util.raiseNotDefined()
+	qI = []
+	qG = []
+	vis, answer, parent = [], [], {}
+	#print(state)
+	qI.insert(0,problem.getStartState())
+	qG.insert(0,(problem.startingPosition,tuple([1,1,1,1])))
+	vis.append(problem.getStartState())
+	vis.append((problem.startingPosition,tuple([1,1,1,1])))
+	currStateI = None
+	currStateG = None
+	parent[problem.getStartState()] = None
+	#parent[(problem.startingPosition,tuple([1,1,1,1]))] = None
+	while((not len(qI)==0) and (not len(qG)==0)):
+		print "entro "
+		currStateI = qI.pop()
+		if problem.isGoalState(currStateI) or (currStateI in qG):
+			print "waaa "
+			break
+		adjI = problem.getSuccessors(currStateI)
+		for nextStateI,actionI,costI in adjI:
+			if nextStateI not in vis:
+				vis.append(nextStateI)
+				parent[nextStateI] = (currStateI, actionI)
+				qI.insert(0,nextStateI)
+
+		currStateG = qG.pop()
+		if currStateG==problem.getStartState() or (currStateG in qI):
+			print "weee "
+			break
+		adjG = problem.getPredecessors(currStateG)
+		for nextStateG,actionG,costG in adjG:
+			if nextStateG not in vis:
+				vis.append(nextStateG)
+				parent[currStateG] = (nextStateG, actionG)
+				qG.insert(0,nextStateG)
+		print len(qI)
+		print len(qG)
+
+	print "sali :'v'"
+
+
+	while parent[currStateI]:
+		answer.append(parent[currStateI][1])
+		currStateI = parent[currStateI][0]
+
+	answer = answer[::-1] #Reverse
+	#print([x[0] for x in answer])
+	return answer
 
 # Abbreviations
 bfs = breadthFirstSearch
@@ -233,3 +280,4 @@ dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
 ids = iterativeDeepeningSearch
+bds = bidirectionalSearch

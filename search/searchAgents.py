@@ -369,6 +369,48 @@ class CornersProblem(search.SearchProblem):
 			self._visitedList.append(state[0])
 		return successors
 
+	def getPredecessors(self, state):
+		"""
+		Returns successor states, the actions they require, and a cost of 1.
+
+		 As noted in search.py:
+			For a given state, this should return a list of triples, (successor,
+			action, stepCost), where 'successor' is a successor to the current
+			state, 'action' is the action required to get there, and 'stepCost'
+			is the incremental cost of expanding to that successor
+		"""
+
+		predecessors = []
+		for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+			# Add a successor state to the successor list if the action is legal
+			# Here's a code snippet for figuring out whether a new position hits a wall:
+			#   x,y = currentPosition
+			#   dx, dy = Actions.directionToVector(action)
+			#   nextx, nexty = int(x + dx), int(y + dy)
+			#   hitsWall = self.walls[nextx][nexty]
+
+			"*** YOUR CODE HERE ***"
+			x,y = state[0]
+			corners = list(deepcopy(state[1]))
+			dx, dy = Actions.directionToVector(action)
+			nextx, nexty = int(x + dx), int(y + dy)
+			if not self.walls[nextx][nexty]:
+				newPos = (nextx, nexty)
+				if(newPos in self.corners):
+					idx = self.corners.index(newPos)
+					corners[idx] = 0
+
+				nextState = ((nextx, nexty), tuple(corners))
+				cost = self.costFn(nextState[0])
+				predecessors.append( ( nextState, action, cost) )
+
+		self._expanded += 1 # DO NOT CHANGE
+
+		if state not in self._visited:
+			self._visited[state] = True
+			self._visitedList.append(state[0])
+		return predecessors
+
 	def getCostOfActions(self, actions):
 		"""
 		Returns the cost of a particular sequence of actions.  If those actions
