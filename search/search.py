@@ -18,7 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
-from Queue import Queue
+from Queue import *
 
 class SearchProblem:
 	"""
@@ -115,6 +115,7 @@ def breadthFirstSearch(problem):
 	"*** YOUR CODE HERE ***"
 	q = Queue()
 	vis, state, answer, parent = [], problem.getStartState(), [], {}
+	#print(state)
 	q.put(state)
 	vis.append(state)
 	currState = None
@@ -153,7 +154,40 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
 	"""Search the node that has the lowest combined cost and heuristic first."""
 	"*** YOUR CODE HERE ***"
-	util.raiseNotDefined()
+	q = PriorityQueue()
+	vis, state, answer, parent, dist = [], problem.getStartState(), [], {}, {}
+	#print(state)
+	q.put([heuristic(state, problem),state])
+	vis.append(state)
+	dist[state] = 0
+	parent[state] = None
+	currState = None
+	while(not q.empty()):
+		currState = q.get()
+		currState = currState[1]
+		if problem.isGoalState(currState):
+			break
+		adj = problem.getSuccessors(currState)
+		for nextState, action, cost in adj:
+			if nextState not in vis:
+				dist[nextState] = dist[currState] + cost
+				q.put([(heuristic(nextState, problem) + dist[nextState]), nextState])
+				parent[nextState] = (currState, action)
+				vis.append(nextState)
+			else:
+				if(dist[nextState] > dist[currState] + cost):
+					dist[nextState] = dist[currState] + cost
+					q.put([(heuristic(nextState, problem) + dist[nextState]), nextState])
+					parent[nextState] = (currState, action)
+
+	while parent[currState]:
+		answer.append(parent[currState][1])
+		currState = parent[currState][0]
+
+	answer = answer[::-1] #Reverse
+	print([x[0] for x in answer])
+	return answer
+
 
 def iterativeDeepeningSearch(problem):
 	""" Iterative Deepening Search improved with Binary Search to find the lowest depth"""
