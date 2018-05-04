@@ -227,12 +227,12 @@ def DLS(problem, state, vis, answer, depth):
 def bidirectionalSearch(problem):
 	qI = []
 	qG = []
-	vis, answer, parent = [], [], {}
+	visI,visG, answer, parent =[], [], [], {}
 	#print(state)
 	qI.insert(0,problem.getStartState())
 	qG.insert(0,(problem.startingPosition,tuple([1,1,1,1])))
-	vis.append(problem.getStartState())
-	vis.append((problem.startingPosition,tuple([1,1,1,1])))
+	visI.append(problem.getStartState())
+	visG.append((problem.startingPosition,tuple([1,1,1,1])))
 	currStateI = None
 	currStateG = None
 	parent[problem.getStartState()] = None
@@ -245,8 +245,8 @@ def bidirectionalSearch(problem):
 			break
 		adjI = problem.getSuccessors(currStateI)
 		for nextStateI,actionI,costI in adjI:
-			if nextStateI not in vis:
-				vis.append(nextStateI)
+			if nextStateI not in visI:
+				visI.append(nextStateI)
 				parent[nextStateI] = (currStateI, actionI)
 				qI.insert(0,nextStateI)
 
@@ -256,8 +256,8 @@ def bidirectionalSearch(problem):
 			break
 		adjG = problem.getPredecessors(currStateG)
 		for nextStateG,actionG,costG in adjG:
-			if nextStateG not in vis:
-				vis.append(nextStateG)
+			if nextStateG not in visG:
+				visG.append(nextStateG)
 				parent[currStateG] = (nextStateG, actionG)
 				qG.insert(0,nextStateG)
 		print len(qI)
@@ -265,7 +265,8 @@ def bidirectionalSearch(problem):
 
 	print "sali :'v'"
 
-
+	stateF=(problem.startingPosition,tuple([1,1,1,1]))
+	print stateF
 	while parent[currStateI]:
 		answer.append(parent[currStateI][1])
 		currStateI = parent[currStateI][0]
