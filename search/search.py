@@ -228,7 +228,6 @@ def bidirectionalSearch(problem):
 	qI = []
 	qG = []
 	visI,visG, answer, parent,child =[], [], [], {},{}
-	#print(state)
 	qI.insert(0,problem.getStartState())
 	qG.insert(0,(problem.startingPosition,tuple([1,1,1,1])))
 	visI.append(problem.getStartState())
@@ -240,7 +239,6 @@ def bidirectionalSearch(problem):
 	while((not len(qI)==0) and (not len(qG)==0)):
 		currStateI = qI.pop()
 		if problem.isGoalState(currStateI) or (currStateI in qG):
-			#print "waaa "
 			break
 		adjI = problem.getSuccessors(currStateI)
 		for nextStateI,actionI,costI in adjI:
@@ -251,31 +249,23 @@ def bidirectionalSearch(problem):
 
 		currStateG = qG.pop()
 		if currStateG==problem.getStartState() or (currStateG in qI):
-			#print "weee "
 			break
 		adjG = problem.getPredecessors(currStateG)
 		for nextStateG,actionG,costG in adjG:
 			if nextStateG not in visG:
 				visG.append(nextStateG)
 				child[nextStateG] = (currStateG, actionG)
-				#print currStateG
-				if ((18, 11), (0, 0, 1, 1))==currStateG: print "yei"
 				qG.insert(0,nextStateG)
 
-	#print "sali :'v'"
 	from copy import deepcopy
-	#stateF=(problem.startingPosition,tuple([1,1,1,1]))
 	aux=deepcopy(currStateI)
 	while parent[currStateI]:
-		#print "+" , currStateI
 		answer.append(parent[currStateI][1])
 		currStateI = parent[currStateI][0]
 
 	answer = answer[::-1] #Reverse
 
-	#aux = child[aux][0]
 	while child[aux]:
-		#print "-",aux
 		if child[aux][1]=='North':
 			answer.append('South')
 		elif child[aux][1]=='South':
@@ -284,12 +274,8 @@ def bidirectionalSearch(problem):
 			answer.append('West')
 		elif  child[aux][1]=='West':
 			answer.append('East')
-		#answer.append(child[aux][1])
 		aux = child[aux][0]
 
-
-
-	#print([x[0] for x in answer])
 	return answer
 
 # Abbreviations
