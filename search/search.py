@@ -156,7 +156,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 	"*** YOUR CODE HERE ***"
 	q = PriorityQueue()
 	vis, state, answer, parent, dist = [], problem.getStartState(), [], {}, {}
-	#print(state)
 	q.put([heuristic(state, problem),state])
 	vis.append(state)
 	dist[state] = 0
@@ -180,6 +179,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 					q.put([(heuristic(nextState, problem) + dist[nextState]), nextState])
 					parent[nextState] = (currState, action)
 
+	print(state)
 	while parent[currState]:
 		answer.append(parent[currState][1])
 		currState = parent[currState][0]

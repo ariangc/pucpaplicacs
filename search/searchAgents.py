@@ -573,7 +573,90 @@ class ClosestDotSearchAgent(SearchAgent):
 		problem = AnyFoodSearchProblem(gameState)
 
 		"*** YOUR CODE HERE ***"
-		util.raiseNotDefined()
+		from Queue import Queue
+		q = Queue()
+		visited, parent = [], {}
+		parent[startPosition] = None
+		q.put(startPosition)
+		visited.append(startPosition)
+		currState = None
+		while(not q.empty()):
+			currState = q.get()
+			if(food[currState[0]][currState[1]]): break
+			adj = problem.getSuccessors(currState)
+			for nextState, action, cost in adj:
+				if(nextState not in visited):
+					parent[nextState] = (currState, action)
+					q.put(nextState)
+					visited.append(nextState)
+
+		answer = []
+		food[currState[0]][currState[1]] = False
+		while(parent[currState]):
+			answer.append(parent[currState][1])
+			currState = parent[currState][0]
+
+		answer = answer[::-1]
+		return answer
+
+class CornersGreedySearchAgent(SearchAgent):
+
+	def registerInitialState(self, state):
+		self.actions = []
+		currentState = state
+		while(currentState.getFood().count() > 0 or currentState.data.agentStates[0].start.pos != currentState.getPacmanPosition()):
+			print(currentState.getFood().count())
+			nextPathSegment = self.findPathToClosestDot(currentState) # The missing piece
+			self.actions += nextPathSegment
+			for action in nextPathSegment:
+				legal = currentState.getLegalActions()
+				print(action,legal)
+				if action not in legal:
+					t = (str(action), str(currentState))
+					raise Exception, 'findPathToClosestDot returned an illegal move: %s!\n%s' % t
+				currentState = currentState.generateSuccessor(0, action)
+		self.actionIndex = 0
+		print 'Path found with cost %d.' % len(self.actions)
+
+	def findPathToClosestDot(self, gameState):
+		"""
+		Returns a path (a list of actions) to the closest dot, starting from
+		gameState.
+		"""
+		# Here are some useful elements of the startState
+		startPosition = gameState.getPacmanPosition()
+		food = gameState.getFood()
+		walls = gameState.getWalls()
+		problem = CornersProblem(gameState)
+
+		"*** YOUR CODE HERE ***"
+		from Queue import Queue
+		q = Queue()
+		visited, parent = [], {}
+		parent[startPosition] = None
+		q.put(startPosition)
+		visited.append(startPosition)
+		currState = None
+		while(not q.empty()):
+			currState = q.get()
+			if(food[currState[0]][currState[1]]): break
+			elif(gameState.getNumFood() == 0 and currState == gameState.data.agentStates[0].start.pos): break
+			adj = problem.getSuccessors((currState,(0,0,0,0)))
+			for nextState, action, cost in adj:
+				if(nextState[0] not in visited):
+					parent[nextState[0]] = (currState, action)
+					q.put(nextState[0])
+					visited.append(nextState[0])
+
+		answer = []
+		food[currState[0]][currState[1]] = False
+		while(parent[currState]):
+			answer.append(parent[currState][1])
+			currState = parent[currState][0]
+
+		answer = answer[::-1]
+		print(answer)
+		return answer
 
 class AnyFoodSearchProblem(PositionSearchProblem):
 	"""

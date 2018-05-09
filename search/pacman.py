@@ -351,10 +351,10 @@ class PacmanRules:
         # Eat
         next = pacmanState.configuration.getPosition()
         nearest = nearestPoint( next )
-        if manhattanDistance( nearest, next ) <= 0.5 :
-            # Remove food
-            PacmanRules.consume( nearest, state ) #FROZ
-
+        #if manhattanDistance( nearest, next ) <= 0.5 :
+        # Remove food
+        PacmanRules.consume( nearest, state ) #FROZ
+        """
         #ADDED BY FROZ
         numFood = state.getNumFood()
         pacman = [state.data.agentStates[i] for i in range(len(state.data.agentStates)) if state.data.agentStates[i].isPacman == True][0]
@@ -364,11 +364,14 @@ class PacmanRules:
             state.data.scoreChange += 500
             state.data._win = True
         #END
+        """
 
     applyAction = staticmethod( applyAction )
 
     def consume( position, state ): #FROZ
         x,y = position
+        posStart = state.data.agentStates[0].start.pos
+        numFood = state.getNumFood()
         # Eat food
         if state.data.food[x][y]:
             state.data.scoreChange += 10
@@ -376,12 +379,20 @@ class PacmanRules:
             state.data.food[x][y] = False
             state.data._foodEaten = position
             # TODO: cache numFood?
-            """
+
             numFood = state.getNumFood()
+
             if numFood == 0 and not state.data._lose:
                 state.data.scoreChange += 500
                 state.data._win = True
-            """
+
+
+        numFood = state.getNumFood()
+        print(numFood)
+        if numFood == 0 and not state.data._lose and posStart == position:
+            state.data.scoreChange += 500
+            state.data._win = True
+
         # Eat capsule
         if( position in state.getCapsules() ):
             state.data.capsules.remove( position )

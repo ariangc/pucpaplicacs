@@ -335,6 +335,7 @@ class Actions:
         x_int, y_int = int(x + 0.5), int(y + 0.5)
 
         # In between grid points, all agents must continue straight
+
         if (abs(x - x_int) + abs(y - y_int)  > Actions.TOLERANCE):
             return [config.getDirection()]
 
@@ -344,7 +345,7 @@ class Actions:
             next_x = x_int + dx
             if not walls[next_x][next_y]: possible.append(dir)
 
-        #print(possible)
+        print("Possible: {}".format(possible))
         return possible
 
     getPossibleActions = staticmethod(getPossibleActions)
