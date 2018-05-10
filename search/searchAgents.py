@@ -299,6 +299,7 @@ class CornersProblem(search.SearchProblem):
 			self.cornersState[idx] = 1
 
 		self.startState = (self.startingPosition, tuple(self.cornersState))
+		self.distToEnd = {}
 
 
 	def getStartState(self):
@@ -308,7 +309,6 @@ class CornersProblem(search.SearchProblem):
 		"""
 		"*** YOUR CODE HERE ***"
 		return self.startState
-		#Simple comment change to test git
 
 	def isGoalState(self, state):
 		"""
@@ -424,7 +424,6 @@ class CornersProblem(search.SearchProblem):
 			if self.walls[x][y]: return 999999
 		return len(actions)
 
-
 def cornersHeuristic(state, problem):
 	"""
 	A heuristic for the CornersProblem that you defined.
@@ -444,11 +443,11 @@ def cornersHeuristic(state, problem):
 	"*** YOUR CODE HERE ***"
 	ret = 0
 	for i in range(len(corners)):
-		ret = max(ret, 0 if state[1][i] == 1 else abs(state[0][0] - corners[i][0]) + abs(state[0][1] - corners[i][1]))
+		ret += 0 if state[1][i] == 1 else abs(state[0][0] - corners[i][0]) + abs(state[0][1] - corners[i][1])
 
 	startingPosition = problem.getStartState()[0]
 	distOrigin = abs(state[0][0] - startingPosition[0]) + abs(state[0][1] - startingPosition[1])
-	return (ret if ret > 0 else distOrigin)
+	return ret + distOrigin
 
 class AStarCornersAgent(SearchAgent):
 	"A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -613,7 +612,7 @@ class CornersGreedySearchAgent(SearchAgent):
 				print(action,legal)
 				if action not in legal:
 					t = (str(action), str(currentState))
-					raise Exception, 'findPathToClosestDot returned an illegal move: %s!\n%s' % t
+					#raise Exception, 'findPathToClosestDot returned an illegal move: %s!\n%s' % t
 				currentState = currentState.generateSuccessor(0, action)
 		self.actionIndex = 0
 		print 'Path found with cost %d.' % len(self.actions)
@@ -654,8 +653,8 @@ class CornersGreedySearchAgent(SearchAgent):
 			answer.append(parent[currState][1])
 			currState = parent[currState][0]
 
+		print("In memory: {}".format(q.qsize()))
 		answer = answer[::-1]
-		print(answer)
 		return answer
 
 class AnyFoodSearchProblem(PositionSearchProblem):

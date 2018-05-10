@@ -96,7 +96,7 @@ class GameState:
         Returns the successor state after the specified agent takes the action.
         """
         # Check that successors exist
-        if self.isWin() or self.isLose(): raise Exception('Can\'t generate a successor of a terminal state.')
+        #if self.isWin() or self.isLose(): raise Exception('Can\'t generate a successor of a terminal state.')
 
         # Copy current state
         state = GameState(self)
@@ -351,24 +351,13 @@ class PacmanRules:
         # Eat
         next = pacmanState.configuration.getPosition()
         nearest = nearestPoint( next )
-        #if manhattanDistance( nearest, next ) <= 0.5 :
-        # Remove food
-        PacmanRules.consume( nearest, state ) #FROZ
-        """
-        #ADDED BY FROZ
-        numFood = state.getNumFood()
-        pacman = [state.data.agentStates[i] for i in range(len(state.data.agentStates)) if state.data.agentStates[i].isPacman == True][0]
-        cond = pacman.start.pos == pacman.configuration.pos
-        #print(pacman.start.pos, pacman.configuration.pos)
-        if numFood == 0 and not state.data._lose and cond:
-            state.data.scoreChange += 500
-            state.data._win = True
-        #END
-        """
+        if manhattanDistance( nearest, next ) <= 0.5 :
+            # Remove food
+            PacmanRules.consume( nearest, state )
 
     applyAction = staticmethod( applyAction )
 
-    def consume( position, state ): #FROZ
+    def consume( position, state ):
         x,y = position
         posStart = state.data.agentStates[0].start.pos
         numFood = state.getNumFood()
@@ -382,13 +371,12 @@ class PacmanRules:
 
             numFood = state.getNumFood()
 
-            if numFood == 0 and not state.data._lose:
+            if numFood == 0 and not state.data._lose and posStart == position:
                 state.data.scoreChange += 500
                 state.data._win = True
 
 
         numFood = state.getNumFood()
-        print(numFood)
         if numFood == 0 and not state.data._lose and posStart == position:
             state.data.scoreChange += 500
             state.data._win = True

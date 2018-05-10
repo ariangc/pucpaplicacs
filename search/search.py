@@ -88,34 +88,36 @@ def depthFirstSearch(problem):
 	print "Start's successors:", problem.getSuccessors(problem.getStartState())
 	"""
 	"*** YOUR CODE HERE ***"
-	vis, state, answer = [], problem.getStartState(), []
-	DFS(problem, state, vis, answer)
-	#print([x[0] for x in answer])
+	vis, state, answer,parent = [], problem.getStartState(), [],{}
+	q = []
+	q.append(state)
+	vis.append(state)
+	currState = None
+	parent[state] = None
+	while(len(q)):
+		currState = q.pop()
+		if problem.isGoalState(currState):
+			break
+		adj = problem.getSuccessors(currState)
+		for nextState,action,cost in adj:
+			if nextState not in vis:
+				vis.append(nextState)
+				parent[nextState] = (currState, action)
+				q.append(nextState)
+
+	while parent[currState]:
+		answer.append(parent[currState][1])
+		currState = parent[currState][0]
+
+	answer = answer[::-1]
+	print("In memory: {}".format(len(q)))
 	return answer
-
-def DFS(problem, state, vis, answer):
-	if(problem.isGoalState(state)):
-		return True
-
-	adj = problem.getSuccessors(state)
-	for nextState in adj:
-		if(nextState[0] in vis): #If the state has been already visited, skip
-			continue
-		vis.append(nextState[0])
-		answer.append(nextState[1])
-		if DFS(problem, nextState[0], vis, answer):
-			return True
-		answer.pop()
-
-	return False
-
 
 def breadthFirstSearch(problem):
 	"""Search the shallowest nodes in the search tree first."""
 	"*** YOUR CODE HERE ***"
 	q = Queue()
 	vis, state, answer, parent = [], problem.getStartState(), [], {}
-	#print(state)
 	q.put(state)
 	vis.append(state)
 	currState = None
@@ -135,8 +137,8 @@ def breadthFirstSearch(problem):
 		answer.append(parent[currState][1])
 		currState = parent[currState][0]
 
-	answer = answer[::-1] #Reverse
-	#print([x[0] for x in answer])
+	print("In memory: {}".format(q.qsize()))
+	answer = answer[::-1]
 	return answer
 
 def uniformCostSearch(problem):
@@ -173,56 +175,53 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 				q.put([(heuristic(nextState, problem) + dist[nextState]), nextState])
 				parent[nextState] = (currState, action)
 				vis.append(nextState)
-			else:
-				if(dist[nextState] > dist[currState] + cost):
-					dist[nextState] = dist[currState] + cost
-					q.put([(heuristic(nextState, problem) + dist[nextState]), nextState])
-					parent[nextState] = (currState, action)
 
-	print(state)
+	print("In memory: {}".format(q.qsize()))
 	while parent[currState]:
 		answer.append(parent[currState][1])
 		currState = parent[currState][0]
 
 	answer = answer[::-1] #Reverse
-	print([x[0] for x in answer])
 	return answer
-
 
 def iterativeDeepeningSearch(problem):
 	""" Iterative Deepening Search improved with Binary Search to find the lowest depth"""
-	minDepth, maxDepth = 0, int(1e5)
-	while minDepth < maxDepth:
-		depth = (minDepth + maxDepth) >> 1
-		print("Depth: {}".format(depth))
-		vis, state, answer = [], problem.getStartState(), []
-		found = DLS(problem, state,vis,answer, depth)
-		print(depth, found)
-		if found:
-			maxDepth = depth
+	maxDepth = 0
+	while(True):
+		vis, state, answer, depth,parent = [], problem.getStartState(), [],{},{}
+		q = []
+		depth[state] = 0
+		q.append(state)
+		vis.append(state)
+		currState = None
+		parent[state] = None
+		found = False
+		while(len(q)):
+			currState = q.pop()
+			if(problem.isGoalState(currState)):
+				found = True
+				break
+			if(depth[currState] == maxDepth):
+				break
+			if problem.isGoalState(currState):
+				break
+			adj = problem.getSuccessors(currState)
+			for nextState,action,cost in adj:
+				if nextState not in vis:
+					depth[nextState] = depth[currState] + 1
+					vis.append(nextState)
+					parent[nextState] = (currState, action)
+					q.append(nextState)
+		if(found):
+			while parent[currState]:
+				answer.append(parent[currState][1])
+				currState = parent[currState][0]
+
+			print("In memory: {}".format(len(q)))
+			answer = answer[::-1]
+			return answer
 		else:
-			minDepth = depth + 1
-
-	vis, state, answer = [], problem.getStartState(), []
-	found = DLS(problem, state,vis,answer, maxDepth)
-	return answer
-
-def DLS(problem, state, vis, answer, depth):
-	if problem.isGoalState(state):
-		return True
-
-	if depth > 0:
-		adj = problem.getSuccessors(state)
-		for nextState in adj:
-			if(nextState[0] in vis): #If the state has been already visited, skip
-				continue
-			vis.append(nextState[0])
-			answer.append(nextState[1])
-			if DLS(problem, nextState[0], vis, answer, depth-1):
-				return True
-			answer.pop()
-
-	return False
+			maxDepth += 1
 
 def bidirectionalSearch(problem):
 	qI = []
@@ -276,6 +275,7 @@ def bidirectionalSearch(problem):
 			answer.append('East')
 		aux = child[aux][0]
 
+	print("In memory: {}".format(len(qI) + len(qG)))
 	return answer
 
 # Abbreviations

@@ -345,7 +345,6 @@ class Actions:
             next_x = x_int + dx
             if not walls[next_x][next_y]: possible.append(dir)
 
-        print("Possible: {}".format(possible))
         return possible
 
     getPossibleActions = staticmethod(getPossibleActions)
