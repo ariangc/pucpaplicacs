@@ -1,0 +1,18 @@
+python pacman.py -l tinyCorners -p SearchAgent -a fn=dfs,prob=CornersProblem
+python pacman.py -l tinyCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
+python pacman.py -l tinyCorners -p SearchAgent -a fn=ids,prob=CornersProblem
+python pacman.py -l tinyCorners -p SearchAgent -a fn=bds,prob=CornersProblem
+python pacman.py -l tinyCorners -p SearchAgent -a fn=astar,prob=CornersProblem,heuristic=cornersHeuristic
+python pacman.py -l mediumCorners -p SearchAgent -a fn=dfs,prob=CornersProblem
+python pacman.py -l mediumCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
+python pacman.py -l mediumCorners -p SearchAgent -a fn=ids,prob=CornersProblem
+python pacman.py -l tinyCorners -p SearchAgent -a fn=bds,prob=CornersProblem
+python pacman.py -l mediumCorners -p SearchAgent -a fn=astar,prob=CornersProblem,heuristic=cornersHeuristic
+python pacman.py -l bigCorners -p SearchAgent -a fn=dfs,prob=CornersProblem -z .5
+python pacman.py -l bigCorners -p SearchAgent -a fn=bfs,prob=CornersProblem -z .5
+python pacman.py -l bigCorners -p SearchAgent -a fn=ids,prob=CornersProblem -z .5
+python pacman.py -l bigCorners -p SearchAgent -a fn=astar,prob=CornersProblem,heuristic=cornersHeuristic -z .5
+python pacman.py -l mediumCorners -p SearchAgent -a fn=aStarSearch,prob=CornersProblem,heuristic=cornersHeuristic -z 0.5
+python pacman.py -l tinyCorners -p CornersGreedySearchAgent -a fn=bfs,prob=CornersProblem
+python pacman.py -l mediumCorners -p CornersGreedySearchAgent -a fn=bfs,prob=CornersProblem
+python pacman.py -l bigCorners -p CornersGreedySearchAgent -a fn=bfs,prob=CornersProblem -z .5
