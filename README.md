@@ -8,7 +8,6 @@ Pontificia Universidad Catolica del Peru (PUCP).
 0. [Introduccion](#introduccion)
 0. [Problema presentado](#problema-presentado)
 0. [Solucion](#solucion)
-0. [Modelo](#modelo)
 0. [Results](#results)
 0. [API](#api)
 
@@ -23,6 +22,19 @@ En este reto se busca ayudar a una empresa retail a mejorar su proceso de manejo
 A traves de un clasificador de imagenes, podemos ayudar a la compania a analizar su inventario.
 
 Todos los datos se pueden encontrar en el siguiente enlace: [Data Reto Brein](https://www.dropbox.com/s/kub6cebbsgiotla/reto_deep_learning.rar?dl=0)
+
+### Solucion
+
+Se uso el modelo ResNet-18 descrito en el paper "Deep Residual Learning for Image Recognition" (http://arxiv.org/abs/1512.03385). Este modelo, asi como la familia de ResNets, fueron usados en [ILSVRC](http://image-net.org/challenges/LSVRC/2015/) y [COCO](http://mscoco.org/dataset/#detections-challenge2015), competencias de Computer Vision en 2015, en los que ganaron el 1er puesto en: Clasificacion de ImageNet, Deteccion de ImageNet, Localizacion de Imagenet, Deteccion en COCO, y Segmentacion en COCO.
+
+### Resultados
+
+0. Curvas de accuracy sobre el dataset
+	![Training acc curves](https://raw.githubusercontent.com/ariangc/breinchallenge/master/models/pytorch_resnet18/train_val_acc.jpg)
+
+0. Curvas de loss sobre el dataset
+	![Training loss curves](https://raw.githubusercontent.com/ariangc/breinchallenge/master/models/pytorch_resnet18/train_val_loss.jpg)
+
 
 # Reemplazar todo lo demas
 
