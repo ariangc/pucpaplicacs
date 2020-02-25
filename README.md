@@ -33,10 +33,10 @@ Se uso una distribucion de 63%-27%-10% del dataset para train, validation y test
 
 ### Resultados
 
-0. Curvas de accuracy sobre el dataset (20 epocas, learning rate = 0.0001, optimizador = Adam)
+0. Curvas de accuracy sobre el dataset (20 epocas, learning rate = 0.00005, optimizador = Adam)
 	![Training acc curves](https://raw.githubusercontent.com/ariangc/breinchallenge/master/models/pytorch_resnet18/train_val_acc.jpg)
 
-0. Curvas de loss sobre el dataset (20 epocas, learning rate = 0.0001, optimizador = Adam)
+0. Curvas de loss sobre el dataset (20 epocas, learning rate = 0.00005, optimizador = Adam)
 	![Training loss curves](https://raw.githubusercontent.com/ariangc/breinchallenge/master/models/pytorch_resnet18/train_val_loss.jpg)
 
 0. Matriz de confusion no normalizada (test = 10% del dataset)
