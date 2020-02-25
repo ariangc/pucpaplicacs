@@ -29,10 +29,10 @@ Se uso el modelo ResNet-18 descrito en el paper "Deep Residual Learning for Imag
 
 ### Resultados
 
-0. Curvas de accuracy sobre el dataset
+0. Curvas de accuracy sobre el dataset (20 epocas, learning rate = 0.0001, optimizador = Adam)
 	![Training acc curves](https://raw.githubusercontent.com/ariangc/breinchallenge/master/models/pytorch_resnet18/train_val_acc.jpg)
 
-0. Curvas de loss sobre el dataset
+0. Curvas de loss sobre el dataset (20 epocas, learning rate = 0.0001, optimizador = Adam)
 	![Training loss curves](https://raw.githubusercontent.com/ariangc/breinchallenge/master/models/pytorch_resnet18/train_val_loss.jpg)
 
 
