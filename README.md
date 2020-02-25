@@ -47,6 +47,5 @@ Se uso una distribucion de 63%-27%-10% del dataset para train, validation y test
 
 ### API
 
-Para usar este modelo para clasificar imagenes contenidas en un directorio, instalar las dependencias en la carpeta **client/requirements.txt** con el comando **pip install -r path-to-requirements.txt**, y luego ejecutar el siguiente comando: `python main.py --data_path DATA_PATH` donde **DATA\_PATH** es el directorio conteniendo las imagenes.
-
+Para usar este modelo para clasificar imagenes contenidas en un directorio, instalar las dependencias en la carpeta **client/requirements.txt** con el comando **pip install -r path-to-requirements.txt**, y luego ejecutar el siguiente comando: `python main.py --data_path DATA_PATH` donde **DATA\_PATH** es el directorio conteniendo las imagenes. El resultado se guardara en el archivo **results.csv**.
 
